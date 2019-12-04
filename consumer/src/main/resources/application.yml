@@ -1,0 +1,40 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: consumer # 应用名称
+eureka:
+  client:
+    service-url: # EurekaServer地址
+      defaultZone: http://127.0.0.1:10086/eureka
+#user-service: # {服务名称}.ribbon.NFLoadBalancerRuleClassName
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+ribbon:
+  eager-load: # 饿加载
+    clients:
+      - user-service
+    enabled: true
+  ConnectTimeout: 500 # 连接超时时长
+  ReadTimeout: 2000 # 数据通信超时时长
+  MaxAutoRetries: 0 # 当前服务器的重试次数
+  MaxAutoRetriesNextServer: 1 # 重试多少次服务
+  OkToRetryOnAllOperations: false # 是否对所有的请求方式都重试
+feign:
+  hystrix:
+    enabled: true # feign集成了hystrix，开启熔断
+  compression:
+    request:
+      enabled: true # 开启请求压缩
+      mime-types: text/html,application/xml,application/json # 设置压缩的数据类型
+      min-request-size: 2048 # 设置触发压缩的大小下限
+    response:
+      enabled: true # 开启响应压缩
+logging:
+  level:
+   com.multi: debug
+
+#hystrix:
+#  command:
+#    default:
+#       execution.isolation.thread.timeoutInMilliseconds: 2000 # 超时时间默认为1秒

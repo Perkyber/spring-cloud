@@ -1,0 +1,42 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: api-gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+zuul:
+  ignored-services: # 禁用路由规则
+    - eureka-server
+    - consumer
+ribbon:
+  eager-load:
+    enabled: true # 开启饥饿加载
+    clients:
+    - user-service # 要加载的负载均衡的客户端
+  ConnectTimeout: 300 # 建立连接的超时时间
+  ReadTimeout: 800 # 读取数据的超时时间
+  MaxAutoRetries: 0 # 当前服务最大重试次数
+  MaxAutoRetriesNextServer: 1 # 重试服务的最大次数
+hystrix:
+  command:
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: 2500
+#zuul: # 简写形式，省略映射路径和服务名
+#  routes:
+#    user-service: user-service
+#zuul:
+#  routes:
+#    user-service:
+#      path: /user-service/**
+#      serviceId: user-service # 根据服务Id实现负载均衡
+#      url: http://127.0.0.1:8081 -> 端口号固定不适于负载均衡
+#zuul:
+#  prefix: /api
+#    routes:
+#      user-service:
+#        path: /user/**
+#        serviceId: user-service
+#        strip-prefix: false # 是否在转发时，去除路由前缀，这里不去除，映射路径中的user就会继续转发
